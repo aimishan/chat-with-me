@@ -119,7 +119,6 @@
                 width: 790px;
                 padding-right: 10px;
                 clear: both;
-                overflow: hidden;
             }
             .textLeft {
                 clear: both;
@@ -197,9 +196,9 @@
                             position: "left",
                             content: robot.robotResponse(text)
                         })
-                        //console.log("textarea.scrollTop: "+document.getElementById("textarea").scrollTop+" textarea.scrollHeight: "+document.getElementById("textarea").scrollHeight)
-                        //console.log("allText.scrollTop: "+document.getElementById("all-text").scrollTop+" allText.scrollHeight: "+document.getElementById("all-text").scrollHeight)
-                        //document.getElementById("textarea").scrollTop = document.getElementById("textarea").scrollHeight
+                        console.log("textarea.scrollTop: "+document.getElementById("textarea").scrollTop+" textarea.scrollHeight: "+document.getElementById("textarea").scrollHeight)
+                        console.log("allText.scrollTop: "+document.getElementById("all-text").scrollTop+" allText.scrollHeight: "+document.getElementById("all-text").scrollHeight)
+                        $("#all-text").scrollTop($("#all-text").scrollHeight)
                         
                     }
                 }
