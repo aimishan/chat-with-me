@@ -19,6 +19,8 @@
                 position: absolute;
                 left: 0px;
                 top: 0px;
+                background-color: #7ac3af;
+                overflow: hidden;
             }
             #infobar-container {
                 z-index: 3;
@@ -35,7 +37,7 @@
                 height: 470px;
                 position: absolute;
                 top: 80px;
-                background-color: rgb(156, 197, 186);
+                background-image: url(bg.png);
                 overflow: hidden;
             }
             #bottombar-container {
@@ -71,6 +73,11 @@
                 background-color: #008cba;
                 color: #fefefe;
                 border-radius: 5px;
+                transition: .25s ease;
+            }
+            #sender:active {
+                background-color: #fefefe;
+                color: #000000;
             }
             
             #photo{
@@ -123,20 +130,58 @@
             .textLeft {
                 clear: both;
                 float: left;
+                background-color: #8f8f8f;
+                color: #fefefe;
             }
             .textRight {
                 clear: both;
                 float: right;
+                background-color: #008cba;
+                color: #fefefe;
             }
             .speech {
                 position: relative;
                 padding: 10px;
                 max-width: 40%;
                 min-width: 10%;
-                background-color: #8f8f8f;
-                opacity: .5;
-                color: #fefefe;
+                opacity: .7;
                 border-radius: 5px;
+            }
+
+            #help {
+                z-index: 2;
+                width: 790px;
+                height: 200px;
+                padding: 10px;
+                position: absolute;
+                left: 5px;
+                top: 345px;
+                background-color: #fefefe;
+                border-radius: 10px;
+            }
+            #help-content {
+                width: 820px;
+                height: 200px;
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+            #help-content ul{
+                width: 820px;
+                min-height: 200px;
+                height: auto;
+                padding-left: 5px;
+                padding-right: 25px;
+            }
+            .help-item {
+                list-style: none;
+                width: 100%;
+                color: #8f8f8f;
+                font-size: 15px;
+                line-height: 25px;
+                padding-left: 10px;
             }
         </style>
     </head>
@@ -161,12 +206,31 @@
                 <input id="input" v-on:keyup.enter="sendMessage" type="text"></input>
                 <a v-on:click="sendMessage" id="sender" href="#">Send</a>
             </div>
+            <transition name="slide" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
+                <div id="help" v-if="isHelpOpen">
+                    <div id="help-content">
+                        <ul>
+                            <li v-for="helpText in allHelpText" class="help-item">{{ helpText }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </transition>
         </div>
         <script>
             char = new Vue({
                 el: "#chat-container",
                 data: {
-                    textContents: []
+                    textContents: [],
+                    isHelpOpen: false,
+                    allHelpText: ["Command List:",
+                                ":name also :n => check the name of the robot",
+                                ":version also :v => check the version of the robot",
+                                ":mail also :m => show the author's mail address",
+                                ":greeting also :g => show the greetings from the robot",
+                                ":background also :bg => change the background color of the program by the grammar of :bg #color_value",
+                                "   for example: :bg #39c5bb which will change the background color into the color of Hastsune Miku",
+                                ":help also :h => show the help page",
+                                ":endhelp also :end => close the help page"]
                 },
                 computed: {
                     textLength: function() {
@@ -179,11 +243,20 @@
                     },
                     isTextRight: function() {
                         return !this.isTextLeft
+                    },
+                },
+                watch: {
+                    isHelpOpen: function() {
+                        
                     }
                 },
                 methods: {
                     sendMessage: function() {
                         var text = document.getElementById("input").value
+                        if(text == ":h" || text == ":help")
+                            this.isHelpOpen = true;
+                        if(text == ":end" || text == "endhelp")
+                            this.isHelpOpen = false
                         this.textContents.push({
                                 position: "right",
                                 content: text

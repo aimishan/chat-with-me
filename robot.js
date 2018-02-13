@@ -21,6 +21,19 @@ robot = {
             case ":g":
             case ":greeting":
                 return this.info.greeting;
+            case ":background":
+            case ":bg": {
+                $("#chat-container").css("background-color", wordsConsequences[1])
+                return "Background Color has been changed: "+wordsConsequences[1]
+            }
+            case ":help":
+            case ":h": {
+                return "help page has been open"
+            }
+            case ":endhelp":
+            case ":end": {
+                return "help page has been closed"
+            }
             default:
                 return "\"" + wordsConsequences[0] + "\" unrecognized command"
             }
