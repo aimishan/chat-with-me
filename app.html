@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Chat with me</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="animate.css"></link>
+        <script src="vue.js"></script>
+        <script src="jquery-3.3.1.min.js"></script>
+        <script src="robot.js"></script>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0px;
+                padding: 0px;
+            }
+            #chat-container {
+                width: 800px;
+                height: 600px;
+                position: absolute;
+                left: 0px;
+                top: 0px;
+            }
+            #infobar-container {
+                z-index: 3;
+                width: 100%;
+                height: 80px;
+                position: absolute;
+                top: 0px;
+                background-color: #fefefe;
+                padding: 2.5px;
+            }
+            #textarea-container {
+                z-index: 1;
+                width: 100%;
+                height: 470px;
+                position: absolute;
+                top: 80px;
+                background-color: rgb(156, 197, 186);
+                overflow: hidden;
+            }
+            #bottombar-container {
+                z-index: 3;
+                width: 100%;
+                height: 50px;
+                position: absolute;
+                bottom: 0px;
+                padding: 5px;
+                background-color: #fefefe;
+            }
+            #input {
+                display: inline-block;
+                width: 700px;
+                height: 40px;
+                margin-right: 5px;
+                border: 1px solid #b4aeae;
+                border-radius: 5px;
+                line-height: 30px;
+                font-size: 16px;
+            }
+            #sender {
+                display: inline-block;
+                width: 80px;
+                height: 40px;
+                position: absolute;
+                margin-left: 5px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                line-height: 30px;
+                text-align: center;
+                text-decoration: none;
+                background-color: #008cba;
+                color: #fefefe;
+                border-radius: 5px;
+            }
+            
+            #photo{
+                width: 75px;
+                height: 75px;
+                vertical-align: center;
+                position: absolute;
+                left: 5px;
+                border-radius: 5px;
+            }
+            #nickname {
+                text-decoration: none;
+                vertical-align: center;
+                position: absolute;
+                left: 105px;
+                top: 0px;
+                line-height: 50px;
+                font-size: 25px;
+                color: #8f8f8f;
+            }
+            #status {
+                text-decoration: none;
+                vertical-align: center;
+                position: absolute;
+                left: 105px;
+                top: 50px;
+                line-height: 20px;
+                font-size: 15px;
+                color: #8f8f8f;
+            }
+            
+            #textarea {
+                width: 820px;
+                height: 470px;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+            #all-text {
+                width: 800px;;
+                height: auto;
+                min-height: 470px;
+                padding: 10px;
+            }
+            #all-text li {
+                display: block;
+                width: 790px;
+                padding-right: 10px;
+                clear: both;
+                overflow: hidden;
+            }
+            .textLeft {
+                clear: both;
+                float: left;
+            }
+            .textRight {
+                clear: both;
+                float: right;
+            }
+            .speech {
+                position: relative;
+                padding: 10px;
+                max-width: 40%;
+                min-width: 10%;
+                background-color: #8f8f8f;
+                opacity: .5;
+                color: #fefefe;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="chat-container">
+            <div id="infobar-container">
+                <img id="photo" src="photo.png"></img>
+                <a id="nickname" href="#">Aimishan :iRobot</a>
+                <a id="status" href="#">Keep Online</a>
+            </div>
+            <div id="textarea-container">
+                <div id="textarea">
+                    <transition-group name="slide" id="all-text" tag="ul" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
+                        <li v-for="(message, index) in textContents" v-bind:key="index">
+                            <span></span>
+                            <div class="speech" v-bind:class="{ textLeft: message.position == 'left', textRight: message.position == 'right' }">{{ message.content }}</div>
+                        </li>
+                    </transition-group>
+                </div>
+            </div>
+            <div id="bottombar-container">
+                <input id="input" v-on:keyup.enter="sendMessage" type="text"></input>
+                <a v-on:click="sendMessage" id="sender" href="#">Send</a>
+            </div>
+        </div>
+        <script>
+            char = new Vue({
+                el: "#chat-container",
+                data: {
+                    textContents: []
+                },
+                computed: {
+                    textLength: function() {
+                        return this.textContents.length - 1
+                    },
+                    isTextLeft: function() {
+                        if(this.textLength == -1 || this.textContents[this.textLength].author == "people")
+                            return false;
+                        else return true;
+                    },
+                    isTextRight: function() {
+                        return !this.isTextLeft
+                    }
+                },
+                methods: {
+                    sendMessage: function() {
+                        var text = document.getElementById("input").value
+                        this.textContents.push({
+                                position: "right",
+                                content: text
+                            })
+                        document.getElementById("input").value = ""
+                        this.response(text)
+                    },
+                    response: function(text) {
+                        this.textContents.push({
+                            position: "left",
+                            content: robot.robotResponse(text)
+                        })
+                        //console.log("textarea.scrollTop: "+document.getElementById("textarea").scrollTop+" textarea.scrollHeight: "+document.getElementById("textarea").scrollHeight)
+                        //console.log("allText.scrollTop: "+document.getElementById("all-text").scrollTop+" allText.scrollHeight: "+document.getElementById("all-text").scrollHeight)
+                        //document.getElementById("textarea").scrollTop = document.getElementById("textarea").scrollHeight
+                        
+                    }
+                }
+            })
+        </script>
+    </body>
+</html> 
