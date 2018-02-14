@@ -268,6 +268,7 @@
                 methods: {
                     sendMessage: function() {
                         var text = document.getElementById("input").value
+                        if(text == "") return
                         if(text == ":h" || text == ":help")
                             this.isHelpOpen = true;
                         if(text == ":end" || text == ":endhelp")
