@@ -124,7 +124,7 @@
             }
             #all-text li {
                 position: relative;
-                display: block;
+                display: inline-block;
                 width: 790px;
                 padding-right: 10px;
                 clear: both;
@@ -133,14 +133,10 @@
             .textLeft {
                 clear: both;
                 float: left;
-                background-color: #8f8f8f;
-                color: #fefefe;
             }
             .textRight {
                 clear: both;
                 float: right;
-                background-color: #008cba;
-                color: #fefefe;
             }
             .speech {
                 position: relative;
@@ -149,6 +145,22 @@
                 min-width: 10%;
                 opacity: .7;
                 border-radius: 5px;
+            }
+            .speech.textLeft {
+                background-color: #8f8f8f;
+                color: #fefefe;
+            }
+            .speech.textRight {
+                background-color: #008cba;
+                color: #fefefe;
+            }
+            .time {
+                display: inline-block;
+                padding: 2px;
+                margin-bottom: 2px;
+                font-size: 12px;
+                line-height: 15px;
+                color: #fefefecc;
             }
 
             #help {
@@ -199,7 +211,7 @@
                 <div id="textarea">
                     <transition-group name="slide" id="all-text" tag="ul" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
                         <li v-for="(message, index) in textContents" v-bind:key="index">
-                            <span></span>
+                            <span class="time" v-bind:class="{ textLeft: message.position == 'left', textRight: message.position == 'right' }">{{ message.time }}</span>
                             <div class="speech" v-bind:class="{ textLeft: message.position == 'left', textRight: message.position == 'right' }">{{ message.content }}</div>
                         </li>
                     </transition-group>
@@ -262,20 +274,21 @@
                             this.isHelpOpen = false
                         this.textContents.push({
                                 position: "right",
-                                content: text
+                                content: text,
+                                time: new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
                             })
                         document.getElementById("input").value = ""
                         this.response(text)
+                        document.getElementById("textarea").scrollTop = document.getElementById("textarea").scrollHeight
                     },
                     response: function(text) {
                         this.textContents.push({
                             position: "left",
-                            content: robot.robotResponse(text)
+                            content: robot.robotResponse(text),
+                            time: new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
                         })
                         console.log("textarea.scrollTop: "+document.getElementById("textarea").scrollTop+" textarea.scrollHeight: "+document.getElementById("textarea").scrollHeight)
-                        console.log("allText.scrollTop: "+document.getElementById("all-text").scrollTop+" allText.scrollHeight: "+document.getElementById("all-text").scrollHeight)
-                        $("#all-text").scrollTop($("#all-text").scrollHeight)
-                        
+                        console.log("allText.scrollTop: "+document.getElementById("all-text").scrollTop+" allText.scrollHeight: "+document.getElementById("all-text").scrollHeight)                        
                     }
                 }
             })
