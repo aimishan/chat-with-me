@@ -260,11 +260,6 @@
                         return !this.isTextLeft
                     },
                 },
-                watch: {
-                    isHelpOpen: function() {
-                        
-                    }
-                },
                 methods: {
                     sendMessage: function() {
                         var text = document.getElementById("input").value
@@ -280,7 +275,7 @@
                             })
                         document.getElementById("input").value = ""
                         this.response(text)
-                        document.getElementById("textarea").scrollTop = document.getElementById("textarea").scrollHeight
+                        document.getElementById("textarea").scrollTop = document.getElementById("all-text").scrollHeight
                     },
                     response: function(text) {
                         this.textContents.push({
